@@ -15,6 +15,7 @@
   "dependencies": {
     "consign": "^0.1.6",
     "express": "^4.16.4",
+    "mongoose": "^5.5.7",
     "socket.io": "^2.2.0"
   }
 }

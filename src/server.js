@@ -13,7 +13,7 @@ app.use((req, res, next) => {
 });
 
 consign({ cwd: 'src' })
-    .include()
+    .include('config')
     .into(app);
 
 server.listen(port, () => {
