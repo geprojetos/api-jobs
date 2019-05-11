@@ -1,5 +1,5 @@
 const mongoose  = require('mongoose');
-const jobs      = new mongoose.Schema({
+const jobs      = mongoose.Schema({
 
     title: {
         required: true,
