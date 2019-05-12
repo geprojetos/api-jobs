@@ -4,10 +4,13 @@ let apiJobs    = {};
 apiJobs.list = async (req, res) => {
 
     try {
-        const jobs = await jobsModel.find({}).sort({ createdAt: -1 }).populate({
-            path: 'idCategory',
-            select: 'name'
-        });
+        const jobs = await jobsModel
+                        .find({})
+                        .sort({ createdAt: -1 })
+                        // .populate({
+                        //     path: 'idCategory',
+                        //     select: 'name'
+                        // });
 
         if(jobs) {
             console.log('############# Vagas listadas ###############');
@@ -21,9 +24,10 @@ apiJobs.list = async (req, res) => {
 
 apiJobs.add = async (req, res) => {
 
-    const { title, description } = req.body;
     
     try {
+        const { title, description } = req.body;
+
         await jobsModel.create({title, description}, (error, job) => {
 
             if(error) {
@@ -52,6 +56,29 @@ apiJobs.add = async (req, res) => {
         res.status(400).json({ fail: error.message });
     };
     
+};
+
+apiJobs.listById = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        await jobsModel.findOne({ _id: id }, (error, job) => {
+
+            if(error) {
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;
+            };
+
+            console.log('############# Vaga encontrada ###############');
+            console.log(job);
+            console.log('#############################################');
+            res.status(200).json(job);
+        })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    }
 }
 
 module.exports = apiJobs;
