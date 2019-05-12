@@ -11,4 +11,5 @@ module.exports = app => {
         .route('/job/:id')
         .get(jobsController.listById)
         .put(jobsController.update)
+        .delete(jobsController.remove)
 };

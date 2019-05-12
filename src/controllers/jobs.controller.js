@@ -108,4 +108,29 @@ apiJobs.update = async (req, res) => {
     };
 };
 
+apiJobs.remove = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        await jobsModel.findOneAndDelete({ _id: id }, (error, job) => {
+
+            if(error) {
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;
+            };
+
+            console.log('############# Vaga removida ###############');
+            console.log(job);
+            console.log('###########################################');
+            
+            req.io.emit('job-removed', job);
+            res.status(200).json({ success: 'Vaga removida com sucesso' });
+        })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    };
+};
+
 module.exports = apiJobs;
