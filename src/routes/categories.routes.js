@@ -5,4 +5,5 @@ module.exports = app => {
     app
         .route('/categories')
         .get(categoriesController.list)
+        .post(categoriesController.add)
 };
