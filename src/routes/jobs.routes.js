@@ -5,4 +5,5 @@ module.exports = app => {
     app
         .route('/jobs')
         .get(jobsController.list)
+        .post(jobsController.add)
 };
