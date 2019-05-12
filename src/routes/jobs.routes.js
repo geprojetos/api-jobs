@@ -10,4 +10,5 @@ module.exports = app => {
     app
         .route('/job/:id')
         .get(jobsController.listById)
+        .put(jobsController.update)
 };

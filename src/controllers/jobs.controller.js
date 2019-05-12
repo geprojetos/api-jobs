@@ -79,6 +79,31 @@ apiJobs.listById = async (req, res) => {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
     }
-}
+};
+
+apiJobs.update = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        await jobsModel.findOneAndUpdate({_id: id}, req.body, (error, job) => {
+
+            if(error) {
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;
+            };
+
+            job.set(req.body);
+            job.save();
+            console.log('############# Vaga alterada ###############');
+            console.log(job);
+            console.log('###########################################');
+            res.status(200).json(job);
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    };
+};
 
 module.exports = apiJobs;
