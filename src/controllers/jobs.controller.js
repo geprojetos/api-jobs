@@ -49,6 +49,7 @@ apiJobs.add = async (req, res) => {
             console.log('############# Vaga criada ###############');
             console.log(job);
             console.log('#########################################');
+            req.io.emit('job-new', job);
             res.status(200).json(job);
         })
     } catch (error) {
@@ -98,6 +99,7 @@ apiJobs.update = async (req, res) => {
             console.log('############# Vaga alterada ###############');
             console.log(job);
             console.log('###########################################');
+            req.io.emit('job-modify', job);
             res.status(200).json(job);
         });
     } catch (error) {
