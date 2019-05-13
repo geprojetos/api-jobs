@@ -99,4 +99,30 @@ apiCategories.update = async (req, res) => {
     }
 };
 
+apiCategories.remove = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        await modelCategories.findOneAndDelete({ _id: id }, (error, category) => {
+
+            if(error) {
+                
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;
+            };
+
+            console.log('############# Categoria removida ###############');
+            console.log(category);
+            console.log('################################################');
+
+            req.io.emit('category-remove', category);
+            res.status(200).json({ success: 'Categoria removida com sucesso' })
+        })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message })
+    }
+}
+
 module.exports = apiCategories

@@ -11,4 +11,5 @@ module.exports = app => {
         .route('/categories/:id')
         .get(categoriesController.listById)
         .put(categoriesController.update)
+        .delete(categoriesController.remove)
 };
