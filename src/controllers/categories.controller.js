@@ -20,7 +20,7 @@ apiCategories.listById = async (req, res) => {
 
     try {
         const { id } = req.params;
-        await modelCategories.findOne({ _id: id }, (error, job) => {
+        await modelCategories.findOne({ _id: id }, (error, category) => {
 
             if (error) {
                 console.log(error.message);
@@ -29,9 +29,9 @@ apiCategories.listById = async (req, res) => {
             };
 
             console.log('############# Categoria encontrada ###############');
-            console.log(job);
+            console.log(category);
             console.log('##################################################');
-            res.status(200).json(job);
+            res.status(200).json(category);
         })
     } catch (error) {
         console.log(error.message);
@@ -61,6 +61,42 @@ apiCategories.add = async (req, res) => {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
     };
+};
+
+apiCategories.update = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const { name } = req.body;
+
+        await modelCategories.findOneAndUpdate({ _id: id }, name, (error, category) => {
+
+            if(error) {
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;        
+            };
+
+            if(!name) {
+                console.log('Campo name não foi informado');
+                res.status(400).json({ fail: 'Campo name não foi informado' });
+                return;        
+            };
+
+            category.set(req.body);
+            category.save();
+
+            console.log('############# Categoria alterada ###############');
+            console.log(category);
+            console.log('################################################');
+
+            req.io.emit('category-edit');
+            res.status(200).json(category);
+        })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    }
 };
 
 module.exports = apiCategories
