@@ -16,6 +16,29 @@ apiCategories.list = async (req, res) => {
     };
 };
 
+apiCategories.listById = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        await modelCategories.findOne({ _id: id }, (error, job) => {
+
+            if (error) {
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;
+            };
+
+            console.log('############# Categoria encontrada ###############');
+            console.log(job);
+            console.log('##################################################');
+            res.status(200).json(job);
+        })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    }
+};
+
 apiCategories.add = async (req, res) => {
 
     try {
