@@ -10,6 +10,7 @@ const jobs      = mongoose.Schema({
         type: String
     },
     idCategory: {
+        required: true,
         type: mongoose.Schema.Types.ObjectId, ref: 'categories'
     }
 },
