@@ -81,6 +81,44 @@ apiAdmin.add = async (req, res) => {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
     };
+};
+
+apiAdmin.update = async (req, res) => {
+
+    try {
+      const { id }   = req.params;
+      const { login, email, password } = req.body;
+
+      await adminModel.findOneAndUpdate({ _id: id }, req.body, (error, admin) => {
+
+        if(error) {
+            console.log(error.message);
+            res.status(400).json({ fail: error.message });
+            return;
+        };
+
+        if(login || email || password) {
+
+            admin.set(req.body);
+            admin.save();
+    
+            console.log('############# User alterado ###############');
+            console.log(admin);
+            console.log('############################################');
+    
+            req.io.emit('admin-update', admin);
+            res.status(200).json(admin);
+            return;
+        }
+
+        console.log('############# User com campo inválido ###############');
+        res.status(400).json({ fail: 'O campo informado está inválido' });
+
+      })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    };
 }
 
 module.exports = apiAdmin;

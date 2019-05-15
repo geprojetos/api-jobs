@@ -10,4 +10,5 @@ module.exports = app => {
     app
         .route('/admin/user/:id')
         .get(adminController.listById)
+        .put(adminController.update)
 };
