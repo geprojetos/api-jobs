@@ -1,5 +1,6 @@
-const jobsModel = require('../models/jobs.model');
-let apiJobs    = {};
+const mongoose  = require('mongoose');
+const jobsModel = mongoose.model('jobs');
+let apiJobs     = {};
 
 apiJobs.list = async (req, res) => {
 

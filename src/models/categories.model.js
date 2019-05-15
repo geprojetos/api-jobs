@@ -10,4 +10,4 @@ const categories = new mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('categories', categories);
+mongoose.model('categories', categories);

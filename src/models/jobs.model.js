@@ -18,4 +18,4 @@ const jobs      = mongoose.Schema({
     timestamps: true
 });
 
-module.exports = mongoose.model('jobs', jobs);
+mongoose.model('jobs', jobs);

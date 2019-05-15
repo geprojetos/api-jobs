@@ -1,4 +1,5 @@
-const modelCategories = require('../models/categories.model');
+const mongoose        = require('mongoose');
+const modelCategories = mongoose.model('categories')
 let apiCategories     = {};
 
 apiCategories.list = async (req, res) => {
