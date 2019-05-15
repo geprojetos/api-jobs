@@ -119,6 +119,32 @@ apiAdmin.update = async (req, res) => {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
     };
+};
+
+apiAdmin.remove = async (req, res) => {
+
+    try {
+      const { id } = req.params;
+
+      await adminModel.findOneAndRemove({ _id: id }, (error, admin) => {
+
+        if(error) {
+            console.log(error.message);
+            res.status(400).json({ fail: error.message });
+            return;    
+        };
+
+        console.log('############# User removido ###############');
+        console.log(admin);
+        console.log('############################################');
+
+        req.io.emit('admin-removed', admin);
+        res.status(200).json({ success: 'Usuário removido' });
+      })
+    } catch (error) {
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    };
 }
 
 module.exports = apiAdmin;
