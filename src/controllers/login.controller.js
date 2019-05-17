@@ -1,5 +1,7 @@
-const mongoose  = require('mongoose');
-const adminModel= mongoose.model('admin');
+const mongoose      = require('mongoose');
+const adminModel    = mongoose.model('admin');
+const jwt           = require('jsonwebtoken');
+const authSecret    = require('../config/auth.secret.json');
 let apiLogin    = {};
 
 apiLogin.login = async (req, res) => {
@@ -28,10 +30,26 @@ apiLogin.login = async (req, res) => {
             };
 
             if(user) {
+                user.password = undefined;
+
+                const token = jwt.sign(
+                    {
+                        id: user._id,
+                        login: user.login,
+                        email: user.email
+                    },
+                    authSecret.secret,
+                    {
+                        expiresIn: 86400
+                    }
+                );
+                
+                res.set('x-access-token', token);
+                res.status(200).json({ user, token });
+
                 console.log('############# Logado ###############');
                 console.log(user);
                 console.log('####################################');
-                res.status(200).json(user);
                 return;
             } else {
                 console.log('login ou password inválidos');
