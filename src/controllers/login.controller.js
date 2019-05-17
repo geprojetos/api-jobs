@@ -62,5 +62,32 @@ apiLogin.login = async (req, res) => {
     };
 };
 
+apiLogin.requiredToken = async (req, res, next) => {
+
+    console.log('############# Endereço necessita de autenticação ###############');
+    const token = req.headers['x-access-token'];
+
+    if(!token) {
+        console.log('############# Token não informado ###############');
+        res.status(400).json({ fail: 'Token não informado' });
+        return;
+    };
+
+    jwt.verify(token, authSecret.secret, (error, decoded) => {
+
+        if(error) {
+            console.log(error.message);
+            console.log('Token inválido');
+            
+            res.status(400).json({ fail: 'Token inválido' });
+            return;
+        };
+
+        console.log('############# Acesso autorizado ###############');
+        req.user = decoded.id;
+        next();
+    });
+};
+
 
 module.exports = apiLogin;
