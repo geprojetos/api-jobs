@@ -145,6 +145,6 @@ apiAdmin.remove = async (req, res) => {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
     };
-}
+};
 
 module.exports = apiAdmin;
