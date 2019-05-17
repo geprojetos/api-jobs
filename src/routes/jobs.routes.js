@@ -6,11 +6,11 @@ module.exports = app => {
     app
         .route('/jobs')
         .get(jobsController.list)
-        .post(jobsController.add)
+        .post(loginController.requiredToken, jobsController.add)
 
     app
         .route('/job/:id')
         .get(jobsController.listById)
-        .put(jobsController.update)
-        .delete(jobsController.remove)
+        .put(loginController.requiredToken, jobsController.update)
+        .delete(loginController.requiredToken, jobsController.remove)
 };

@@ -1,4 +1,5 @@
 const adminController = require('../controllers/admin.controller');
+const loginController = require('../controllers/login.controller');
 
 module.exports = app => {
 
@@ -10,6 +11,6 @@ module.exports = app => {
     app
         .route('/admin/user/:id')
         .get(adminController.listById)
-        .put(adminController.update)
-        .delete(adminController.remove)
+        .put(loginController.requiredToken, adminController.update)
+        .delete(loginController.requiredToken, adminController.remove)
 };
