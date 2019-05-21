@@ -5,14 +5,6 @@ let apiJobs     = {};
 apiJobs.list = async (req, res) => {
 
     try {
-        // const jobs = await jobsModel
-        //                 .find({})
-        //                 .sort({ createdAt: -1 })
-        //                 .populate({
-        //                     path: 'idCategory',
-        //                     select: 'name'
-        //                 });
-
         const { page = 1 } = req.query;
         const jobs = await jobsModel.paginate(
             {},

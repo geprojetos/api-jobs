@@ -46,30 +46,16 @@ apiAdmin.add = async (req, res) => {
 
     try {
       const { login, email, password } = req.body;
+      
       await adminModel.create({ login, email, password }, (error, admin) => {
 
         if(error) {
             console.log(error.message);
-            
-            if(error.errors.login) {
-                console.log(error.errors.login.message);
-                res.status(400).json({ fail: error.errors.login.message });
-                return
-            };
-
-            if(error.errors.email) {
-                console.log(error.errors.email.message);
-                res.status(400).json({ fail: error.errors.email.message });
-                return
-            };
-
-            if(error.errors.password) {
-                console.log(error.errors.password.message);
-                res.status(400).json({ fail: error.errors.password.message });
-                return
-            };
+            res.status(400).json({ fail: error.message });
+            return;
         };
 
+        admin.password = undefined;
         console.log('############# User criado ###############');
         console.log(admin);
         console.log('#########################################');

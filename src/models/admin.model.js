@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcryptjs = require('bcryptjs');
 const admin    = new mongoose.Schema({
 
     login: {
@@ -18,6 +19,14 @@ const admin    = new mongoose.Schema({
 },
 {
     timestamps: true
-})
+});
+
+admin.pre('save', async function(next) {
+    
+    const hash = await bcryptjs.hash(this.password, 10);
+
+    this.password = hash;
+    next();
+});
 
 mongoose.model('admin', admin);
