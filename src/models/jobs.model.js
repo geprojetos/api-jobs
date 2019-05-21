@@ -1,5 +1,6 @@
 const mongoose  = require('mongoose');
-const jobs      = mongoose.Schema({
+const paginate  = require('mongoose-paginate');
+const jobs      = new mongoose.Schema({
 
     title: {
         required: true,
@@ -17,5 +18,7 @@ const jobs      = mongoose.Schema({
 {
     timestamps: true
 });
+
+jobs.plugin(paginate);
 
 mongoose.model('jobs', jobs);
