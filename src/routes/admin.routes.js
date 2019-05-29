@@ -13,4 +13,8 @@ module.exports = app => {
         .get(adminController.listById)
         .put(loginController.requiredToken, adminController.update)
         .delete(loginController.requiredToken, adminController.remove)
+
+    app
+        .route('/admin/user/changepassword/:id')
+        .put(adminController.changePassword)
 };

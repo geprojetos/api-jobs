@@ -9,7 +9,7 @@ apiLogin.login = async (req, res) => {
 
     try {
         const { login, password } = req.body;
-        const user = await adminModel.findOne({ login });
+        const user = await adminModel.findOne({ login }).select('+password');
 
         if(!login) {
             console.log('login não informado');

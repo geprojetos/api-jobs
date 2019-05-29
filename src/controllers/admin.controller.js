@@ -1,5 +1,8 @@
 const mongoose      = require('mongoose');
 const adminModel    = mongoose.model('admin');
+const jwt           = require('jsonwebtoken');
+const authSecret    = require('../config/auth.secret.json');
+const bcrypt        = require('bcryptjs');
 let apiAdmin        = {};
 
 apiAdmin.list = async (req, res) => {
@@ -73,7 +76,7 @@ apiAdmin.update = async (req, res) => {
 
     try {
       const { id }   = req.params;
-      const { login, email, password } = req.body;
+      const { login, email } = req.body;
 
       await adminModel.findOneAndUpdate({ _id: id }, req.body, (error, admin) => {
 
@@ -83,7 +86,7 @@ apiAdmin.update = async (req, res) => {
             return;
         };
 
-        if(login || email || password) {
+        if(login || email) {
 
             admin.set(req.body);
             admin.save();
@@ -105,6 +108,104 @@ apiAdmin.update = async (req, res) => {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
     };
+};
+
+apiAdmin.changePassword = async (req, res, next) => {
+
+    const token = req.headers['x-access-token'];
+    const { id } = req.params;
+    let { password, newPassword, confirmNewPassword } = req.body;
+    
+    console.log('############# Endereço necessita de autenticação ###############');
+ 
+    if(!token) {
+        
+        console.log('############# Token não informado ###############');
+        res.status(400).json({ fail: 'Token não informado' });
+        return;
+    };
+
+    const decoded = jwt.verify(token, authSecret.secret, (error, decoded) => {
+
+        if(error) {
+
+            console.log('Token inválido');
+            console.log(error.message);
+            res.status(400).json({ fail: 'Token inválido' });
+            return;
+        };
+
+        if(id != decoded.id) {
+            console.log('############# Acesso não permitido ###############');    
+            res.status(400).json({ fail: 'Acesso não permitido' });
+            return;
+        };
+
+        return decoded;
+    });
+
+    if(!decoded) return;
+
+    if(!password) {
+        console.log('############# password não informado ###############');    
+        res.status(400).json({ fail: 'password não informado' });
+        return;
+    };
+
+    if(!newPassword) {
+        console.log('############# newPassword não informado ###############');    
+        res.status(400).json({ fail: 'newPassword não informado' });
+        return;
+    };
+
+    if(!confirmNewPassword) {
+        console.log('############# confirmNewPassword não informado ###############');    
+        res.status(400).json({ fail: 'confirmNewPassword não informado' });
+        return;
+    };
+
+    try {  
+        const admin = await adminModel.findOne({ _id: id }, (error) => {
+
+            if(error) {
+                console.log(error.message);
+                res.status(400).json({ fail: error.message });
+                return;
+            };
+
+        }).select(['login', 'password']);
+
+        if(!await bcrypt.compare(password, admin.password)) {
+            console.log('############# password informado não é válido ###############');        
+            res.status(400).json({ fail: 'password informado não é válido' });
+            return;
+        };
+
+        if(password == newPassword) {
+
+            console.log('############# não pode usar a mesmo password ###############');
+            res.status(400).json({ fail: 'não pode usar o mesmo password' });
+            return;
+        };
+
+        if(newPassword != confirmNewPassword) {
+            console.log('############# o newPassword não está igual ao confirmNewPassword  ###############');  
+            res.status(400).json({ fail: 'o newPassword não está igual ao confirmNewPassword ' });
+            return;
+        };
+
+        admin.password = newPassword;
+        admin.save();
+
+        console.log('############# password alterado ###############');
+        res.status(200).json({ success: 'password alterado' });
+    } catch (error) {
+
+        console.log(error.message);
+        res.status(400).json({ fail: error.message });
+    };
+
+    next();
 };
 
 apiAdmin.remove = async (req, res) => {
