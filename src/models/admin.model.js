@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
+const paginate = require('mongoose-paginate');
 const admin    = new mongoose.Schema({
 
     login: {
@@ -21,6 +22,8 @@ const admin    = new mongoose.Schema({
 {
     timestamps: true
 });
+
+admin.plugin(paginate);
 
 admin.pre('save', async function(next) {
     

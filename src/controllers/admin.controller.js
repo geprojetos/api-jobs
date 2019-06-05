@@ -8,12 +8,19 @@ let apiAdmin        = {};
 apiAdmin.list = async (req, res) => {
 
     try {
-      const admins = await adminModel.find({}).sort({ createdAt: -1 });
+        const { page = 1 } = req.query;
+        const admins = await adminModel.paginate(
+            {},
+            {
+                sort: { createdAt: -1 },
+                page, limit: 10
+            }
+        );
 
       if(admins) {
         console.log('############# Users listadas ###############');
         res.status(200).json(admins);
-      }
+      };
     } catch (error) {
         console.log(error.message);
         res.status(400).json({ fail: error.message });
