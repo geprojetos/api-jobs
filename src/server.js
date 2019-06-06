@@ -24,6 +24,7 @@ server.listen(port, () => {
 
     if(port === 3001) {
         console.log('Servidor local rodando em http://localhost:3001');
+        return;
     };
 
     console.log('Servidor remoto rodando');
